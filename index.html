@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แพลตฟอร์ม CBAM Carbon Footprint - TGO</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #4CAF50, #2E7D32);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .nav-tabs {
+            background: white;
+            border-radius: 15px;
+            padding: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .nav-tabs ul {
+            display: flex;
+            list-style: none;
+            gap: 5px;
+        }
+        
+        .nav-tabs li {
+            flex: 1;
+        }
+        
+        .nav-tabs a {
+            display: block;
+            padding: 15px 20px;
+            text-decoration: none;
+            color: #666;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .nav-tabs a.active {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .main-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            min-height: 600px;
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+            border: 2px solid #f0f0f0;
+            border-radius: 12px;
+            padding: 25px;
+            background: #fafafa;
+        }
+        
+        .form-section h3 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            font-size: 1.3em;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .required {
+            color: #e74c3c;
+        }
+        
+        .hint {
+            background: #e3f2fd;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            color: #1976d2;
+            margin-bottom: 8px;
+            border-left: 4px solid #2196f3;
+        }
+        
+        input, select, textarea {
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(45deg, #78909c, #546e7a);
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-draft {
+            background: #e2e3e5;
+            color: #383d41;
+        }
+        
+        .report-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .copy-button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+        
+        .progress-bar {
+            background: #e9ecef;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+        
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 5px solid;
+        }
+        
+        .alert-info {
+            background: #e3f2fd;
+            color: #1976d2;
+            border-color: #2196f3;
+        }
+        
+        .validation-error {
+            color: #e74c3c;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        
+        .floating-help {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #667eea;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            font-size: 24px;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-tabs ul {
+                flex-direction: column;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-section">
+                <div class="logo">TGO</div>
+                <div>
+                    <h1 style="color: #333; margin-bottom: 5px;">แพลตฟอร์ม CBAM Carbon Footprint</h1>
+                    <p style="color: #666;">องค์การบริหารจัดการก๊าซเรือนกระจก (องค์การมหาชน)</p>
+                </div>
+            </div>
+            <div class="user-info">
+                <div style="text-align: right;">
+                    <div style="font-weight: 600;">บริษัท เอบีซี จำกัด</div>
+                    <div style="color: #666; font-size: 0.9em;">สถานะ: ยืนยันแล้ว</div>
+                </div>
+                <button class="btn btn-secondary" onclick="logout()">ออกจากระบบ</button>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-tabs">
+            <ul>
+                <li><a href="#" class="active" onclick="showPage('dashboard')">หน้าหลัก</a></li>
+                <li><a href="#" onclick="showPage('form')">กรอกข้อมูล CBAM</a></li>
+                <li><a href="#" onclick="showPage('reports')">รายงานสรุป</a></li>
+                <li><a href="#" onclick="showPage('status')">สถานะใบสมัคร</a></li>
+                <li><a href="#" onclick="showPage('admin')">ภาพรวมระบบ</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Dashboard Page -->
+            <div id="dashboard" class="page active">
+                <h2 style="margin-bottom: 30px; color: #333;">Dashboard - ภาพรวมข้อมูล CBAM</h2>
+                
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">12</div>
+                        <div>ผลิตภัณฑ์ที่ส่งแล้ว</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">8,450</div>
+                        <div>Carbon Footprint รวม (tCO₂eq)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">3</div>
+                        <div>อยู่ระหว่างพิจารณา</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">9</div>
+                        <div>ได้รับการอนุมัติ</div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>ข้อมูลล่าสุด:</strong> ระยะเวลารายงาน Q1 2025 - กรุณาส่งข้อมูลภายในวันที่ 31 มีนาคม 2025
+                </div>
+
+                <h3 style="margin-bottom: 20px;">ใบสมัคร CBAM ล่าสุด</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ชื่อผลิตภัณฑ์</th>
+                                <th>หมวดหมู่</th>
+                                <th>Carbon Footprint</th>
+                                <th>วันที่ส่ง</th>
+                                <th>สถานะ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Steel Rods - Grade A</td>
+                                <td>Iron and Steel</td>
+                                <td>2.45 tCO₂eq/t</td>
+                                <td>15 มี.ค. 2025</td>
+                                <td><span class="status-badge status-approved">อนุมัติแล้ว</span></td>
+                            </tr>
+                            <tr>
+                                <td>Cement Type I</td>
+                                <td>Cement</td>
+                                <td>0.92 tCO₂eq/t</td>
+                                <td>10 มี.ค. 2025</td>
+                                <td><span class="status-badge status-pending">รอพิจารณา</span></td>
+                            </tr>
+                            <tr>
+                                <td>Aluminum Sheets</td>
+                                <td>Aluminum</td>
+                                <td>8.12 tCO₂eq/t</td>
+                                <td>8 มี.ค. 2025</td>
+                                <td><span class="status-badge status-draft">ร่าง</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Form Page -->
+            <div id="form" class="page">
+                <h2 style="margin-bottom: 20px; color: #333;">กรอกข้อมูลใบสมัคร CBAM</h2>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 40%;"></div>
+                </div>
+                <p style="margin-bottom: 30px; color: #666;">ความคืบหน้า: 2 จาก 5 ขั้นตอน</p>
+
+                <form id="cbamorForm">
+                    <!-- Installation Information -->
+                    <div class="form-section">
+                        <h3>1. ข้อมูลสถานประกอบการ (Installation Information)</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>วันที่เริ่มต้นรายงาน <span class="required">*</span></label>
+                                <div class="hint">ระบุวันที่เริ่มต้นของช่วงเวลาที่ต้องการรายงาน (Reporting Period Start)</div>
+                                <input type="date" name="period_start" required>
+                            </div>
+                            <div class="form-group">
+                                <label>วันที่สิ้นสุดรายงาน <span class="required">*</span></label>
+                                <div class="hint">ระบุวันที่สิ้นสุดของช่วงเวลาที่ต้องการรายงาน (Reporting Period End)</div>
+                                <input type="date" name="period_end" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>ชื่อสถานประกอบการ (ภาษาไทย)</label>
+                                <div class="hint">ชื่อของสถานที่ผลิต เช่น โรงงาน เหมือง (Installation Name - Optional)</div>
+                                <input type="text" name="installation_name_th" placeholder="เช่น โรงงานเหล็กกล้า ABC">
+                            </div>
+                            <div class="form-group">
+                                <label>ชื่อสถานประกอบการ (ภาษาอังกฤษ) <span class="required">*</span></label>
+                                <div class="hint">ชื่อสถานประกอบการเป็นภาษาอังกฤษ (Installation Name - English)</div>
+                                <input type="text" name="installation_name_en" placeholder="e.g. ABC Steel Plant" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>ที่อยู่ <span class="required">*</span></label>
+                                <div class="hint">ถนน เลขที่ (Street, Number)</div>
+                                <input type="text" name="address" placeholder="เช่น 123 ถนนรัชดาภิเษก" required>
+                            </div>
+                            <div class="form-group">
+                                <label>ประเภทกิจกรรมทางเศรษฐกิจ <span class="required">*</span></label>
+                                <div class="hint">เลือกประเภทของกิจกรรมหลักในสถานประกอบการ (Economic Activity)</div>
+                                <select name="economic_activity" required>
+                                    <option value="">เลือกประเภทกิจกรรม</option>
+                                    <option value="iron_steel">การผลิตเหล็กและเหล็กกล้า</option>
+                                    <option value="cement">การผลิตซีเมนต์</option>
+                                    <option value="aluminum">การผลิตอะลูมิเนียม</option>
+                                    <option value="electricity">การผลิตไฟฟ้า</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>รหัสไปรษณีย์ <span class="required">*</span></label>
+                                <div class="hint">รหัสไปรษณีย์ (Post Code)</div>
+                                <input type="text" name="postcode" placeholder="เช่น 10400" required>
+                            </div>
+                            <div class="form-group">
+                                <label>ตู้ไปรษณีย์</label>
+                                <div class="hint">หมายเลขตู้ไปรษณีย์ (ถ้ามี) (P.O. Box)</div>
+                                <input type="text" name="po_box" placeholder="เช่น P.O. Box 123">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>จังหวัด/เมือง <span class="required">*</span></label>
+                                <div class="hint">ชื่อจังหวัดหรือเมือง (City)</div>
+                                <input type="text" name="city" placeholder="เช่น กรุงเทพมหานคร" required>
+                            </div>
+                            <div class="form-group">
+                                <label>ประเทศ <span class="required">*</span></label>
+                                <div class="hint">เลือกประเทศที่สถานประกอบการตั้งอยู่ (Country)</div>
+                                <select name="country" required>
+                                    <option value="">เลือกประเทศ</option>
+                                    <option value="TH">ประเทศไทย (Thailand)</option>
+                                    <option value="CN">จีน (China)</option>
+                                    <option value="IN">อินเดีย (India)</option>
+                                    <option value="JP">ญี่ปุ่น (Japan)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>พิกัดละติจูด <span class="required">*</span></label>
+                                <div class="hint">พิกัดละติจูดของแหล่งปล่อยก๊าซหลัก (Latitude) เช่น 13.7563</div>
+                                <input type="number" step="0.000001" name="latitude" placeholder="เช่น 13.7563" required>
+                                <div class="validation-error" id="lat-error"></div>
+                            </div>
+                            <div class="form-group">
+                                <label>พิกัดลองจิจูด <span class="required">*</span></label>
+                                <div class="hint">พิกัดลองจิจูดของแหล่งปล่อยก๊าซหลัก (Longitude) เช่น 100.5018</div>
+                                <input type="number" step="0.000001" name="longitude" placeholder="เช่น 100.5018" required>
+                                <div class="validation-error" id="lng-error"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Production Processes -->
+                    <div class="form-section">
+                        <h3>2. กระบวนการผลิต (Production Processes)</h3>
+                        <div class="alert alert-info">
+                            ระบุข้อมูลกระบวนการผลิตทั้งหมดที่เกี่ยวข้องกับการผลิตสินค้าที่ต้องรายงาน CBAM
+                        </div>
+                        
+                        <div id="processes-container">
+                            <div class="process-item" style="border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin-bottom: 15px;">
+                                <h4 style="margin-bottom: 15px;">กระบวนการผลิตที่ 1</h4>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>ชื่อกระบวนการ <span class="required">*</span></label>
+                                        <div class="hint">ชื่อของกระบวนการผลิต (Process Name)</div>
+                                        <input type="text" name="process_name_1" placeholder="เช่น เตาหลอมเหล็ก" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>ประเภทกระบวนการ <span class="required">*</span></label>
+                                        <div class="hint">เลือกประเภทของกระบวนการผลิต (Process Type)</div>
+                                        <select name="process_type_1" required>
+                                            <option value="">เลือกประเภท</option>
+                                            <option value="blast_furnace">เตาหลอมสูง (Blast Furnace)</option>
+                                            <option value="electric_arc">เตาโค้งไฟฟ้า (Electric Arc Furnace)</option>
+                                            <option value="cement_kiln">เตาเผาซีเมนต์ (Cement Kiln)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>ปริมาณการผลิต <span class="required">*</span></label>
+                                        <div class="hint">ปริมาณการผลิตในช่วงเวลารายงาน (Production Quantity)</div>
+                                        <input type="number" step="0.01" name="production_quantity_1" placeholder="เช่น 1000" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>หน่วย <span class="required">*</span></label>
+                                        <div class="hint">หน่วยของปริมาณการผลิต (Unit)</div>
+                                        <select name="production_unit_1" required>
+                                            <option value="">เลือกหน่วย</option>
+                                            <option value="tonnes">ตัน (Tonnes)</option>
+                                            <option value="kg">กิโลกรัม (Kg)</option>
+                                            <option value="MWh">เมกะวัตต์ชั่วโมง (MWh)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="button" class="btn btn-secondary" onclick="addProcess()">+ เพิ่มกระบวนการผลิต</button>
+                    </div>
+
+                    <div style="text-align: center; padding: 20px;">
+                        <button type="button" class="btn btn-secondary" onclick="prevStep()" style="margin-right: 15px;">ก้อนหน้า</button>
+                        <button type="button" class="btn" onclick="nextStep()">ขั้นต่อไป</button>
+                        <button type="button" class="btn btn-secondary" onclick="saveDraft()" style="margin-left: 15px;">บันทึกร่าง</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Reports Page -->
+            <div id="reports" class="page">
+                <h2 style="margin-bottom: 30px; color: #333;">รายงานสรุปข้อมูล CBAM</h2>
+                
+                <div class="report-section">
+                    <h3 style="margin-bottom: 15px;">Steel Rods - Grade A</h3>
+                    <p><strong>ผลิตภัณฑ์:</strong> เหล็กเส้นเกรด A | <strong>หมวดหมู่:</strong> Iron and Steel</p>
+                    <p><strong>Carbon Footprint:</strong> 2.45 tCO₂eq/t | <strong>วันที่ส่ง:</strong> 15 มีนาคม 2025</p>
+                    
+                    <h4 style="margin: 20px 0 10px 0;">ข้อมูลสำหรับ Copy ไป Excel Template:</h4>
+                    <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #ddd;">
+                        <p><strong>Worksheet:</strong> Summary_Products</p>
+                        <p><strong>Cell D15:</strong> Steel Rods - Grade A <button class="copy-button" onclick="copyToClipboard('Steel Rods - Grade A')">Copy</button></p>
+                        <p><strong>Cell F15:</strong> 2.45 <button class="copy-button" onclick="copyToClipboard('2.45')">Copy</button></p>
+                        <p><strong>Cell G15:</strong> tCO₂eq/t <button class="copy-button" onclick="copyToClipboard('tCO₂eq/t')">Copy</button></p>
+                    </div>
+                </div>
+
+                <div class="report-section">
+                    <h3 style="margin-bottom: 15px;">สรุปข้อมูลการปล่อยก๊าซเรือนกระจก</h3>
+                    <div class="dashboard-grid">
+                        <div class="stat-card" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">
+                            <div class="stat-number">2,450</div>
+                            <div>Direct Emissions (tCO₂eq)</div>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);">
+                            <div class="stat-number">6,000</div>
+                            <div>Indirect Emissions (tCO₂eq)</div>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, #27ae60 0%, #229954 100%);">
+                            <div class="stat-number">8,450</div>
+                            <div>Total Emissions (tCO₂eq)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn" onclick="exportReport()">ส่งออกรายงานทั้งหมด (Excel)</button>
+            </div>
+
+            <!-- Status Page -->
+            <div id="status" class="page">
+                <h2 style="margin-bottom: 30px; color: #333;">สถานะใบสมัคร CBAM</h2>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>รหัสใบสมัคร</th>
+                                <th>ชื่อผลิตภัณฑ์</th>
+                                <th>หมวดหมู่</th>
+                                <th>วันที่ส่ง</th>
+                                <th>สถานะ</th>
+                                <th>ผู้ตรวจสอบ</th>
+                                <th>หมายเหตุ</th>
+                                <th>การดำเนินการ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>CBAM-2025-001</td>
+                                <td>Steel Rods - Grade A</td>
+                                <td>Iron and Steel</td>
+                                <td>15 มี.ค. 2025</td>
+                                <td><span class="status-badge status-approved">อนุมัติแล้ว</span></td>
+                                <td>คุณสมชาย ใจดี</td>
+                                <td>ข้อมูลครบถ้วน</td>
+                                <td><button class="btn btn-secondary" style="padding: 5px 10px; font-size: 0.8em;">ดูรายละเอียด</button></td>
+                            </tr>
+                            <tr>
+                                <td>CBAM-2025-002</td>
+                                <td>Cement Type I</td>
+                                <td>Cement</td>
+                                <td>10 มี.ค. 2025</td>
+                                <td><span class="status-badge status-pending">รอพิจารณา</span></td>
+                                <td>คุณมาลี สง่า</td>
+                                <td>อยู่ระหว่างตรวจสอบ</td>
+                                <td><button class="btn btn-secondary" style="padding: 5px 10px; font-size: 0.8em;">ดูรายละเอียด</button></td>
+                            </tr>
+                            <tr>
+                                <td>CBAM-2025-003</td>
+                                <td>Aluminum Sheets</td>
+                                <td>Aluminum</td>
+                                <td>8 มี.ค. 2025</td>
+                                <td><span class="status-badge status-draft">ร่าง</span></td>
+                                <td>-</td>
+                                <td>ยังไม่ส่ง</td>
+                                <td><button class="btn" style="padding: 5px 10px; font-size: 0.8em;">แก้ไข</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Admin Page -->
+            <div id="admin" class="page">
+                <h2 style="margin-bottom: 30px; color: #333;">ภาพรวมระบบ (สำหรับ TGO)</h2>
+                
+                <div class="dashboard-grid">
+                    <div class="stat-card" style="background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);">
+                        <div class="stat-number">1,247</div>
+                        <div>บริษัทที่ลงทะเบียน</div>
+                    </div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);">
+                        <div class="stat-number">5,830</div>
+                        <div>ใบสมัครทั้งหมด</div>
+                    </div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%);">
+                        <div class="stat-number">892,450</div>
+                        <div>Carbon Footprint รวม (tCO₂eq)</div>
+                    </div>
+                    <div class="stat-card" style="background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);">
+                        <div class="stat-number">347</div>
+                        <div>อยู่ระหว่างพิจารณา</div>
+                    </div>
+                </div>
+
+                <h3 style="margin-bottom: 20px;">การจำแนกตามหมวดหมู่สินค้า</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>หมวดหมู่สินค้า</th>
+                                <th>จำนวนใบสมัคร</th>
+                                <th>Carbon Footprint เฉลี่ย</th>
+                                <th>Carbon Footprint รวม</th>
+                                <th>เปอร์เซ็นต์ของทั้งหมด</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Iron and Steel</td>
+                                <td>2,134</td>
+                                <td>2.15 tCO₂eq/t</td>
+                                <td>423,870 tCO₂eq</td>
+                                <td>47.5%</td>
+                            </tr>
+                            <tr>
+                                <td>Cement</td>
+                                <td>1,583</td>
+                                <td>0.89 tCO₂eq/t</td>
+                                <td>298,650 tCO₂eq</td>
+                                <td>33.5%</td>
+                            </tr>
+                            <tr>
+                                <td>Aluminum</td>
+                                <td>892</td>
+                                <td>7.85 tCO₂eq/t</td>
+                                <td>125,780 tCO₂eq</td>
+                                <td>14.1%</td>
+                            </tr>
+                            <tr>
+                                <td>Electricity</td>
+                                <td>221</td>
+                                <td>0.42 tCO₂eq/MWh</td>
+                                <td>44,150 tCO₂eq</td>
+                                <td>4.9%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 style="margin: 30px 0 20px 0;">แนวโน้ม Carbon Footprint รายเดือน</h3>
+                <div class="report-section">
+                    <p style="color: #666; margin-bottom: 15px;">กราฟแสดงแนวโน้มการปล่อยก๊าซเรือนกระจกรายเดือน (สามารถพัฒนาเป็น Chart ได้)</p>
+                    <div style="height: 200px; background: #f8f9fa; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #666;">
+                        [กราฟแนวโน้ม Carbon Footprint จะแสดงที่นี่]
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Help Button -->
+        <div class="floating-help" onclick="showHelp()">?</div>
+    </div>
+
+    <script>
+        // Navigation functions
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Remove active from all nav links
+            document.querySelectorAll('.nav-tabs a').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Add active to clicked nav link
+            event.target.classList.add('active');
+        }
+
+        // Form functions
+        function nextStep() {
+            // Validate current step
+            const currentInputs = document.querySelectorAll('#cbamorForm input[required], #cbamorForm select[required]');
+            let valid = true;
+            
+            currentInputs.forEach(input => {
+                if (!input.value) {
+                    input.style.borderColor = '#e74c3c';
+                    valid = false;
+                } else {
+                    input.style.borderColor = '#ddd';
+                }
+            });
+            
+            if (valid) {
+                // Update progress
+                const progressBar = document.querySelector('.progress-fill');
+                const currentWidth = parseInt(progressBar.style.width);
+                if (currentWidth < 100) {
+                    progressBar.style.width = (currentWidth + 20) + '%';
+                }
+                alert('ข้อมูลถูกต้อง! ไปยังขั้นตอนถัดไป');
+            } else {
+                alert('กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน');
+            }
+        }
+
+        function prevStep() {
+            const progressBar = document.querySelector('.progress-fill');
+            const currentWidth = parseInt(progressBar.style.width);
+            if (currentWidth > 20) {
+                progressBar.style.width = (currentWidth - 20) + '%';
+            }
+        }
+
+        function saveDraft() {
+            alert('บันทึกร่างเรียบร้อยแล้ว');
+        }
+
+        function addProcess() {
+            const container = document.getElementById('processes-container');
+            const processCount = container.children.length + 1;
+            
+            const newProcess = document.createElement('div');
+            newProcess.className = 'process-item';
+            newProcess.style.cssText = 'border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin-bottom: 15px;';
+            newProcess.innerHTML = `
+                <h4 style="margin-bottom: 15px;">กระบวนการผลิตที่ ${processCount}</h4>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>ชื่อกระบวนการ <span class="required">*</span></label>
+                        <input type="text" name="process_name_${processCount}" placeholder="เช่น เตาหลอมเหล็ก" required>
+                    </div>
+                    <div class="form-group">
+                        <label>ประเภทกระบวนการ <span class="required">*</span></label>
+                        <select name="process_type_${processCount}" required>
+                            <option value="">เลือกประเภท</option>
+                            <option value="blast_furnace">เตาหลอมสูง (Blast Furnace)</option>
+                            <option value="electric_arc">เตาโค้งไฟฟ้า (Electric Arc Furnace)</option>
+                            <option value="cement_kiln">เตาเผาซีเมนต์ (Cement Kiln)</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="button" onclick="removeProcess(this)" style="background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">ลบ</button>
+            `;
+            
+            container.appendChild(newProcess);
+        }
+
+        function removeProcess(button) {
+            button.parentElement.remove();
+        }
+
+        // Utility functions
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('คัดลอกแล้ว: ' + text);
+            });
+        }
+
+        function exportReport() {
+            alert('กำลังส่งออกรายงาน Excel...');
+        }
+
+        function showHelp() {
+            alert('ความช่วยเหลือ:\n- สำหรับคำถาม: support@tgo.or.th\n- คู่มือการใช้งาน: help.tgo.or.th\n- โทร: 02-xxx-xxxx');
+        }
+
+        function logout() {
+            if (confirm('ต้องการออกจากระบบ?')) {
+                alert('ออกจากระบบเรียบร้อยแล้ว');
+            }
+        }
+
+        // Validation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Coordinate validation
+            const latInput = document.querySelector('input[name="latitude"]');
+            const lngInput = document.querySelector('input[name="longitude"]');
+            
+            if (latInput) {
+                latInput.addEventListener('blur', function() {
+                    const value = parseFloat(this.value);
+                    const errorDiv = document.getElementById('lat-error');
+                    if (value < -90 || value > 90) {
+                        errorDiv.textContent = 'ละติจูดต้องอยู่ระหว่าง -90 ถึง 90';
+                        this.style.borderColor = '#e74c3c';
+                    } else {
+                        errorDiv.textContent = '';
+                        this.style.borderColor = '#ddd';
+                    }
+                });
+            }
+            
+            if (lngInput) {
+                lngInput.addEventListener('blur', function() {
+                    const value = parseFloat(this.value);
+                    const errorDiv = document.getElementById('lng-error');
+                    if (value < -180 || value > 180) {
+                        errorDiv.textContent = 'ลองจิจูดต้องอยู่ระหว่าง -180 ถึง 180';
+                        this.style.borderColor = '#e74c3c';
+                    } else {
+                        errorDiv.textContent = '';
+                        this.style.borderColor = '#ddd';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
