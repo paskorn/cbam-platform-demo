@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CBAM Carbon Footprint Platform- TGO</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -218,6 +219,21 @@
             margin-bottom: 10px;
         }
         
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .chart-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
         .table-container {
             background: white;
             border-radius: 12px;
@@ -243,26 +259,14 @@
             border-bottom: 1px solid #eee;
         }
         
-        .status-badge {
+        .submission-date {
             padding: 6px 12px;
             border-radius: 20px;
             font-size: 0.85em;
             font-weight: 600;
-        }
-        
-        .status-pending {
-            background: #fff3cd;
-            color: #856404;
-        }
-        
-        .status-approved {
-            background: #d4edda;
-            color: #155724;
-        }
-        
-        .status-draft {
-            background: #e2e3e5;
-            color: #383d41;
+            background: #e3f2fd;
+            color: #1976d2;
+            border: 1px solid #bbdefb;
         }
         
         .report-section {
@@ -347,6 +351,10 @@
                 flex-direction: column;
                 gap: 15px;
             }
+            
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -364,7 +372,7 @@
             <div class="user-info">
                 <div style="text-align: right;">
                     <div style="font-weight: 600;">บริษัท เอบีซี จำกัด</div>
-                    <div style="color: #666; font-size: 0.9em;">สถานะ: ยืนยันแล้ว</div>
+                    <div style="color: #666; font-size: 0.9em;">บัญชีผู้ใช้: ยืนยันแล้ว</div>
                 </div>
                 <button class="btn btn-secondary" onclick="logout()">ออกจากระบบ</button>
             </div>
@@ -390,59 +398,75 @@
                 <div class="dashboard-grid">
                     <div class="stat-card">
                         <div class="stat-number">12</div>
-                        <div>ผลิตภัณฑ์ที่ส่งแล้ว</div>
+                        <div>เอกสารส่ง EU แล้ว</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-number">8,450</div>
                         <div>Carbon Footprint รวม (tCO₂eq)</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number">3</div>
-                        <div>อยู่ระหว่างพิจารณา</div>
+                        <div class="stat-number">15,670</div>
+                        <div>ปริมาณสินค้ารวม (Tonnes)</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number">9</div>
-                        <div>ได้รับการอนุมัติ</div>
+                        <div class="stat-number">0.54</div>
+                        <div>เฉลี่ย tCO₂eq/Tonne</div>
                     </div>
                 </div>
 
                 <div class="alert alert-info">
-                    <strong>ข้อมูลล่าสุด:</strong> ระยะเวลารายงาน Q1 2025 - กรุณาส่งข้อมูลภายในวันที่ 31 มีนาคม 2025
+                    <strong>ข้อมูลล่าสุด:</strong> ระยะเวลารายงาน Q1 2025 - เอกสารล่าสุดส่งไปยัง EU เมื่อวันที่ 15 มีนาคม 2025
                 </div>
 
-                <h3 style="margin-bottom: 20px;">ใบสมัคร CBAM ล่าสุด</h3>
+                <!-- Charts Section -->
+                <div class="chart-grid">
+                    <div class="chart-container">
+                        <h3 style="margin-bottom: 20px; color: #333;">ปริมาณสินค้า vs Carbon Footprint ตามเวลา</h3>
+                        <canvas id="productionChart" width="400" height="300"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3 style="margin-bottom: 20px; color: #333;">Carbon Intensity ตามประเภทสินค้า</h3>
+                        <canvas id="intensityChart" width="400" height="300"></canvas>
+                    </div>
+                </div>
+
+                <h3 style="margin-bottom: 20px;">เอกสาร CBAM ส่งไป EU ล่าสุด</h3>
                 <div class="table-container">
                     <table>
                         <thead>
                             <tr>
                                 <th>ชื่อผลิตภัณฑ์</th>
                                 <th>หมวดหมู่</th>
-                                <th>Carbon Footprint</th>
-                                <th>วันที่ส่ง</th>
-                                <th>สถานะ</th>
+                                <th>ปริมาณ (Tonnes)</th>
+                                <th>Carbon Footprint (tCO₂eq)</th>
+                                <th>วันที่ส่งไป EU</th>
+                                <th>รหัสอ้างอิง EU</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td>Steel Rods - Grade A</td>
                                 <td>Iron and Steel</td>
-                                <td>2.45 tCO₂eq/t</td>
-                                <td>15 มี.ค. 2025</td>
-                                <td><span class="status-badge status-approved">อนุมัติแล้ว</span></td>
+                                <td>1,200</td>
+                                <td>2,940 (2.45 tCO₂eq/t)</td>
+                                <td><span class="submission-date">15 มี.ค. 2025</span></td>
+                                <td>EU-CBAM-2025-001234</td>
                             </tr>
                             <tr>
                                 <td>Cement Type I</td>
                                 <td>Cement</td>
-                                <td>0.92 tCO₂eq/t</td>
-                                <td>10 มี.ค. 2025</td>
-                                <td><span class="status-badge status-pending">รอพิจารณา</span></td>
+                                <td>2,500</td>
+                                <td>2,300 (0.92 tCO₂eq/t)</td>
+                                <td><span class="submission-date">10 มี.ค. 2025</span></td>
+                                <td>EU-CBAM-2025-001198</td>
                             </tr>
                             <tr>
                                 <td>Aluminum Sheets</td>
                                 <td>Aluminum</td>
-                                <td>8.12 tCO₂eq/t</td>
-                                <td>8 มี.ค. 2025</td>
-                                <td><span class="status-badge status-draft">ร่าง</span></td>
+                                <td>450</td>
+                                <td>3,654 (8.12 tCO₂eq/t)</td>
+                                <td><span class="submission-date">8 มี.ค. 2025</span></td>
+                                <td>EU-CBAM-2025-001156</td>
                             </tr>
                         </tbody>
                     </table>
@@ -806,6 +830,120 @@
             
             // Add active to clicked nav link
             event.target.classList.add('active');
+        }
+
+        // Initialize charts when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeCharts();
+        });
+
+        function initializeCharts() {
+            // Production vs Carbon Footprint Chart
+            const ctx1 = document.getElementById('productionChart');
+            if (ctx1) {
+                new Chart(ctx1, {
+                    type: 'line',
+                    data: {
+                        labels: ['ม.ค. 2025', 'ก.พ. 2025', 'มี.ค. 2025', 'เม.ย. 2025', 'พ.ค. 2025'],
+                        datasets: [{
+                            label: 'ปริมาณสินค้า (Tonnes)',
+                            data: [3200, 2800, 4150, 3600, 3950],
+                            borderColor: '#667eea',
+                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                            yAxisID: 'y'
+                        }, {
+                            label: 'Carbon Footprint (tCO₂eq)',
+                            data: [1850, 1620, 2400, 2080, 2280],
+                            borderColor: '#e74c3c',
+                            backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                            yAxisID: 'y1'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        interaction: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                        scales: {
+                            x: {
+                                display: true,
+                                title: {
+                                    display: true,
+                                    text: 'เดือน'
+                                }
+                            },
+                            y: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: 'ปริมาณสินค้า (Tonnes)'
+                                }
+                            },
+                            y1: {
+                                type: 'linear',
+                                display: true,
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'Carbon Footprint (tCO₂eq)'
+                                },
+                                grid: {
+                                    drawOnChartArea: false,
+                                },
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Carbon Intensity by Product Type Chart
+            const ctx2 = document.getElementById('intensityChart');
+            if (ctx2) {
+                new Chart(ctx2, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Steel', 'Cement', 'Aluminum', 'Electricity'],
+                        datasets: [{
+                            label: 'Carbon Intensity (tCO₂eq/unit)',
+                            data: [2.45, 0.92, 8.12, 0.42],
+                            backgroundColor: [
+                                'rgba(102, 126, 234, 0.8)',
+                                'rgba(52, 152, 219, 0.8)',
+                                'rgba(231, 76, 60, 0.8)',
+                                'rgba(46, 204, 113, 0.8)'
+                            ],
+                            borderColor: [
+                                '#667eea',
+                                '#3498db',
+                                '#e74c3c',
+                                '#2ecc71'
+                            ],
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Carbon Intensity (tCO₂eq/unit)'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'ประเภทสินค้า'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
         }
 
         // Form functions
